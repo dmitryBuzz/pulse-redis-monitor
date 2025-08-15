@@ -81,7 +81,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['memory']);
 
-            $this->recordMemoryUsage($connection, $output);
+            $this->recordMemoryUsage($connection, current($output));
         }
     }
 
@@ -93,7 +93,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['keyspace']);
 
-            $this->recordKeyUsage($connection, $output);
+            $this->recordKeyUsage($connection, current($output));
         }
     }
 
@@ -105,7 +105,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['stats']);
 
-            $this->recordKeyStats($connection, $output);
+            $this->recordKeyStats($connection, current($output));
         }
     }
 
@@ -117,7 +117,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['stats']);
 
-            $this->recordNetworkUsage($connection, $output);
+            $this->recordNetworkUsage($connection, current($output));
         }
     }
 
@@ -139,36 +139,26 @@ class RedisMonitorRecorder
      */
     protected function recordKeyUsage(string $connection, array $output): void
     {
+
         // Loop through each database in the output array
-        foreach ($output as $dbKey => $statsString) {
+        foreach ($output as $dbKey => $stats) {
             // Skip non-db keys or empty values
-            if (strpos($dbKey, 'db') !== 0 || empty($statsString)) {
+            if (strpos($dbKey, 'db') !== 0 || empty($stats)) {
                 continue;
-            }
-
-            $dbStats = explode(',', $statsString);
-
-            $parsedStats = [];
-
-            foreach ($dbStats as $stat) {
-                [$key, $value] = explode('=', $stat);
-
-                if ($key && $value !== null) {
-                    $parsedStats[$key] = $value;
-                }
             }
 
             $key = $connection.'_'.$dbKey;
 
-            if (isset($parsedStats['keys']) && isset($parsedStats['expires'])) {
-                $this->pulse->record('keys_total', $key, $parsedStats['keys'])->avg()->onlyBuckets();
-                $this->pulse->record('keys_with_expiration', $key, $parsedStats['expires'])->avg()->onlyBuckets();
+            if (isset($stats['keys']) && isset($stats['expires'])) {
+                $this->pulse->record('keys_total', $key, $stats['keys'])->avg()->onlyBuckets();
+                $this->pulse->record('keys_with_expiration', $key, $stats['expires'])->avg()->onlyBuckets();
             }
 
-            if (isset($parsedStats['avg_ttl'])) {
-                $this->pulse->record('avg_ttl', $key, $parsedStats['avg_ttl'])->avg()->onlyBuckets();
+            if (isset($stats['avg_ttl'])) {
+                $this->pulse->record('avg_ttl', $key, $stats['avg_ttl'])->avg()->onlyBuckets();
             }
         }
+
     }
 
     /**
