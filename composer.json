@@ -1,5 +1,5 @@
 {
-    "name": "praatmetdedokter/pulse-redis-monitor",
+    "name": "dmitryBuzz/pulse-redis-monitor",
     "description": "Redis monitoring card for Laravel Pulse",
     "license": "MIT",
     "require": {
