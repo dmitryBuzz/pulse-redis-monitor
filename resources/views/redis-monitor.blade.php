@@ -193,7 +193,7 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
                             pointHitRadius: 10,
                             pointStyle: false,
                             tension: 0.2,
-                            spanGaps: false,
+                            spanGaps: true,
                             segment: {
                                 borderColor: (ctx) => ctx.p0.raw === 0 && ctx.p1.raw === 0 ? 'transparent' : undefined,
                             }
@@ -307,7 +307,7 @@ Alpine.data('redisMonitorActiveKeysChart', (config) => ({
                             pointHitRadius: 10,
                             pointStyle: false,
                             tension: 0.2,
-                            spanGaps: false,
+                            spanGaps: true,
                             segment: {
                                 borderColor: (ctx) => ctx.p0.raw === 0 && ctx.p1.raw === 0 ? 'transparent' : undefined,
                             }
@@ -409,7 +409,7 @@ Alpine.data('redisMonitorRemovedKeysChart', (config) => ({
                             pointHitRadius: 10,
                             pointStyle: false,
                             tension: 0.2,
-                            spanGaps: false,
+                            spanGaps: true,
                             segment: {
                                 borderColor: (ctx) => ctx.p0.raw === 0 && ctx.p1.raw === 0 ? 'transparent' : undefined,
                             }
@@ -504,7 +504,7 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
                             pointHitRadius: 10,
                             pointStyle: false,
                             tension: 0.2,
-                            spanGaps: false,
+                            spanGaps: true,
                             segment: {
                                 borderColor: (ctx) => ctx.p0.raw === 0 && ctx.p1.raw === 0 ? 'transparent' : undefined,
                             }
@@ -632,7 +632,7 @@ Alpine.data('redisMonitorNetworkUsageChart', (config) => ({
                             pointHitRadius: 10,
                             pointStyle: false,
                             tension: 0.2,
-                            spanGaps: false,
+                            spanGaps: true,
                             segment: {
                                 borderColor: (ctx) => ctx.p0.raw === 0 && ctx.p1.raw === 0 ? 'transparent' : undefined,
                             }
