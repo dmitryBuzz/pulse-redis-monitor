@@ -90,8 +90,6 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['memory']);
 
-            $output = [[], $output];
-
             $this->recordMemoryUsage($connection, $this->getOutputArray($output));
         }
     }
