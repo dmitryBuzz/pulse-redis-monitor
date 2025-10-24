@@ -73,6 +73,15 @@ class RedisMonitorRecorder
         }
     }
 
+    protected function getOutputArray(array $output): array
+    {
+        if (empty($output) || isset($output['used_memory'])) {
+            return $output;
+        }
+
+        return $this->getOutputArray(current($output));
+    }
+
     /**
      * Monitors the memory usage of all configured Redis connections.
      */
@@ -81,7 +90,9 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['memory']);
 
-            $this->recordMemoryUsage($connection, current($output));
+            $output = [[], $output];
+
+            $this->recordMemoryUsage($connection, $this->getOutputArray($output));
         }
     }
 
@@ -93,7 +104,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['keyspace']);
 
-            $this->recordKeyUsage($connection, current($output));
+            $this->recordKeyUsage($connection, $this->getOutputArray($output));
         }
     }
 
@@ -105,7 +116,7 @@ class RedisMonitorRecorder
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['stats']);
 
-            $this->recordKeyStats($connection, current($output));
+            $this->recordKeyStats($connection, $this->getOutputArray($output));
         }
     }
 
@@ -116,8 +127,7 @@ class RedisMonitorRecorder
     {
         foreach ($this->connections as $connection) {
             $output = Redis::connection($connection)->command('INFO', ['stats']);
-
-            $this->recordNetworkUsage($connection, current($output));
+            $this->recordNetworkUsage($connection, $this->getOutputArray($output));
         }
     }
 
